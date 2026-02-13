@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LETIZIA LUCE DEI MIEI OCCHI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ffecd2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .container {
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            color: #ff1744;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h2 {
+            font-size: 1.6em;
+            color: #d81b60;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+
+        .emoji {
+            font-size: 3em;
+            margin: 20px 0;
+        }
+
+        button.main-btn {
+            font-size: 1.5em;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            margin: 20px 10px;
+        }
+
+        button.main-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .buttons-container {
+            position: relative;
+            height: 200px;
+            width: 100%;
+            margin-top: 30px;
+        }
+
+        button.answer-btn {
+            font-size: 1.5em;
+            padding: 20px 50px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        #yesBtn {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+
+        #yesBtn:hover {
+            transform: scale(1.15);
+            box-shadow: 0 6px 25px rgba(245, 87, 108, 0.5);
+        }
+
+        #noBtn {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #666;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: none;
+        }
+
+        .timer {
+            font-size: 1.3em;
+            color: #ff1744;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        #gameCanvas {
+            border: 3px solid #ff1744;
+            border-radius: 10px;
+            display: block;
+            margin: 20px auto;
+            background: linear-gradient(to bottom, #87CEEB 0%, #E0F6FF 100%);
+            cursor: pointer;
+        }
+
+        .game-info {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .game-score {
+            color: #ff1744;
+        }
+
+        .game-instructions {
+            background: #fff3e0;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #ff9800;
+        }
+
+        .game-instructions p {
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .kisses-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #ff6b6b 100%);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 30px auto;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .kisses-number {
+            font-size: 5em;
+            color: white;
+            font-weight: bold;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+        }
+
+        .firework, .confetti {
+            position: fixed;
+            pointer-events: none;
+        }
+
+        .firework {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            animation: explode 1s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), var(--y));
+                opacity: 0;
+            }
+        }
+
+        .confetti {
+            width: 10px;
+            height: 10px;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.3em; }
+            #gameCanvas { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hearts" id="hearts"></div>
+
+    <div class="container">
+        <!-- Screen 0: Valentine Question -->
+        <div id="screen0" class="screen active">
+            <h2>Vuoi essere il mio San Valentino?</h2>
+            <div class="timer">⏱️ Tempo: <span id="timer">0</span>s</div>
+            <div class="timer" style="font-size: 1.1em;"><span id="attempts">0</span></div>
+            <div class="buttons-container">
+                <button id="yesBtn" class="answer-btn" onclick="sayYes()">Sì!</button>
+                <button id="noBtn" class="answer-btn">No</button>
+            </div>
+        </div>
+
+        <!-- Screen 1: Game Intro -->
+        <div id="screen1" class="screen">
+            <h1>Ottima scelta puta!</h1>
+            <h2>Ti ho riservato una sorpresa:<br>un giochino a prova di disabile come te!</h2>
+            <button class="main-btn" onclick="startGame()">Inizia il Gioco</button>
+        </div>
+
+        <!-- Screen 2: Game -->
+        <div id="screen2" class="screen">
+            <div class="game-container">
+                <div class="game-instructions">
+                    <p><strong> MOBILE:</strong> Tocca lo schermo per far saltare la patata</p>
+                    <p><strong> COMPUTER:</strong> Premi SPAZIO o clicca per saltare</p>
+                    <p><strong> OBIETTIVO:</strong> Raccogli cuori ed evita gli ostacoli!</p>
+                    <p style="color: #ff1744; font-weight: bold;">Più cuori raccogli, più bacini ti darò!</p>
+                    <p style="color: #4caf50; font-weight: bold;">Puoi fare un doppio salto in aria!</p>
+                </div>
+
+                <div class="game-info">
+                    <div>❤️ Cuori: <span class="game-score" id="gameScore">0</span></div>
+                    <div>⏱️ Tempo: <span id="gameTime">0</span>s</div>
+                    <div>🦘 Salti: <span id="jumpsLeft">2</span>/2</div>
+                </div>
+
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+            </div>
+        </div>
+
+        <!-- Screen 3: Final Result -->
+        <div id="screen3" class="screen">
+            <div class="kisses-box">
+                <h2 style="color: white; margin-bottom: 10px;">Hai raccolto <span id="finalHearts">0</span> cuori!</h2>
+                <div class="kisses-number" id="kissesNumber">0</div>
+                <h2 style="color: white; margin-top: 10px;">BACINI!</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let heartsCollected = 0;
+        let attempts = 0;
+        let startTime = 0;
+        let timerInterval;
+        let hasRetried = false;
+
+        function createHearts() {
+            const heartsContainer = document.getElementById('hearts');
+            for (let i = 0; i < 15; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.innerHTML = ['💗', '💕', '💖', '💝'][Math.floor(Math.random() * 4)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDelay = Math.random() * 6 + 's';
+                heart.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                heartsContainer.appendChild(heart);
+            }
+        }
+        createHearts();
+
+        function nextScreen(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen' + screen).classList.add('active');
+        }
+
+        (function startFinalQuestion() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                document.getElementById('timer').textContent = elapsed;
+            }, 1000);
+
+            const noBtn = document.getElementById('noBtn');
+            let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            function moveButton() {
+                attempts++;
+                document.getElementById('attempts').textContent = attempts;
+
+                const container = document.querySelector('.buttons-container');
+                const maxX = container.offsetWidth - noBtn.offsetWidth;
+                const maxY = container.offsetHeight - noBtn.offsetHeight;
+
+                noBtn.style.left = Math.random() * maxX + 'px';
+                noBtn.style.top = Math.random() * maxY + 'px';
+                noBtn.style.transform = 'none';
+
+                // Rimuovendo le condizioni che cambiano dimensione e testo
+                if (attempts > 3) {
+                    noBtn.style.fontSize = '1.2em';
+                    noBtn.style.padding = '15px 40px';
+                }
+                if (attempts > 5) {
+                    noBtn.style.fontSize = '1em';
+                    noBtn.style.padding = '12px 30px';
+                }
+                // RIMOSSO: Il bottone NON si trasforma più in "Ok, hai vinto!"
+            }
+
+            if (isMobile) {
+                noBtn.addEventListener('click', (e) => { e.preventDefault(); moveButton(); });
+                noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveButton(); });
+            } else {
+                noBtn.addEventListener('mouseover', moveButton);
+            }
+        })();
+
+        function sayYes() {
+            clearInterval(timerInterval);
+            nextScreen(1);
+        }
+
+        function startGame() {
+            nextScreen(2);
+            setTimeout(startGameNow, 500);
+        }
+
+        let game = {
+            canvas: null,
+            ctx: null,
+            potato: { 
+                x: 100, 
+                y: 200, 
+                width: 50, 
+                height: 50, 
+                velocityY: 0, 
+                gravity: 0.5, 
+                jumpPower: -10,
+                jumpsLeft: 2,
+                maxJumps: 2,
+                isOnGround: false
+            },
+            hearts: [],
+            obstacles: [],
+            score: 0,
+            time: 0,
+            isRunning: false,
+            gameLoop: null,
+            timeInterval: null,
+            lastObstacleTime: 0,
+            minObstacleInterval: 40
+        };
+
+        function startGameNow() {
+            game.canvas = document.getElementById('gameCanvas');
+            game.ctx = game.canvas.getContext('2d');
+            game.score = 0;
+            game.time = 0;
+            game.hearts = [];
+            game.obstacles = [];
+            game.potato.y = 200;
+            game.potato.velocityY = 0;
+            game.potato.jumpsLeft = game.potato.maxJumps;
+            game.isRunning = true;
+            game.lastObstacleTime = 0;
+            game.frameCount = 0;
+
+            document.getElementById('gameScore').textContent = '0';
+            document.getElementById('gameTime').textContent = '0';
+            document.getElementById('jumpsLeft').textContent = game.potato.maxJumps;
+
+            game.timeInterval = setInterval(() => {
+                game.time++;
+                document.getElementById('gameTime').textContent = game.time;
+            }, 1000);
+
+            game.gameLoop = setInterval(updateGame, 1000 / 60);
+
+            document.addEventListener('keydown', jump);
+            game.canvas.addEventListener('click', jump);
+            game.canvas.addEventListener('touchstart', jump);
+        }
+
+        function jump(e) {
+            if (game.isRunning && (e.type !== 'keydown' || e.code === 'Space')) {
+                if (game.potato.jumpsLeft > 0) {
+                    game.potato.velocityY = game.potato.jumpPower;
+                    game.potato.jumpsLeft--;
+                    document.getElementById('jumpsLeft').textContent = game.potato.jumpsLeft;
+                }
+                e.preventDefault();
+            }
+        }
+
+        function updateGame() {
+            if (!game.isRunning) return;
+
+            game.frameCount = game.frameCount || 0;
+            game.frameCount++;
+
+            const ctx = game.ctx;
+            const canvas = game.canvas;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#87CEEB');
+            gradient.addColorStop(1, '#E0F6FF');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            game.potato.velocityY += game.potato.gravity;
+            game.potato.y += game.potato.velocityY;
+
+            const groundLevel = canvas.height - game.potato.height - 20;
+            if (game.potato.y >= groundLevel) {
+                game.potato.y = groundLevel;
+                game.potato.velocityY = 0;
+                game.potato.jumpsLeft = game.potato.maxJumps;
+                game.potato.isOnGround = true;
+                document.getElementById('jumpsLeft').textContent = game.potato.jumpsLeft;
+            } else {
+                game.potato.isOnGround = false;
+            }
+
+            if (game.potato.y < 0) {
+                game.potato.y = 0;
+                game.potato.velocityY = 0;
+            }
+
+            ctx.fillStyle = '#7cb342';
+            ctx.fillRect(0, canvas.height - 20, canvas.width, 20);
+
+            ctx.font = '50px Arial';
+            ctx.fillText('🥔', game.potato.x, game.potato.y + 40);
+
+            if (Math.random() < 0.025) {
+                game.hearts.push({
+                    x: canvas.width,
+                    y: Math.random() * (canvas.height - 100) + 50,
+                    width: 30,
+                    height: 30,
+                    speed: 3
+                });
+            }
+
+            const framesSinceLastObstacle = game.frameCount - game.lastObstacleTime;
+
+            if (framesSinceLastObstacle > game.minObstacleInterval && Math.random() < 0.018) {
+                game.obstacles.push({
+                    x: canvas.width,
+                    y: canvas.height - 60,
+                    width: 30,
+                    height: 40,
+                    speed: 4
+                });
+                game.lastObstacleTime = game.frameCount;
+            }
+
+            game.hearts = game.hearts.filter(heart => {
+                heart.x -= heart.speed;
+                ctx.font = '30px Arial';
+                ctx.fillText('💖', heart.x, heart.y + 25);
+
+                if (heart.x < game.potato.x + game.potato.width &&
+                    heart.x + heart.width > game.potato.x &&
+                    heart.y < game.potato.y + game.potato.height &&
+                    heart.y + heart.height > game.potato.y) {
+                    game.score++;
+                    document.getElementById('gameScore').textContent = game.score;
+                    return false;
+                }
+
+                return heart.x > -heart.width;
+            });
+
+            game.obstacles = game.obstacles.filter(obs => {
+                obs.x -= obs.speed;
+                ctx.fillStyle = '#8b4513';
+                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+                if (obs.x < game.potato.x + game.potato.width - 10 &&
+                    obs.x + obs.width > game.potato.x + 10 &&
+                    obs.y < game.potato.y + game.potato.height - 10 &&
+                    obs.y + obs.height > game.potato.y + 10) {
+                    endGame();
+                }
+
+                return obs.x > -obs.width;
+            });
+        }
+
+        function endGame() {
+            game.isRunning = false;
+            clearInterval(game.gameLoop);
+            clearInterval(game.timeInterval);
+            heartsCollected = game.score;
+
+            if (!hasRetried) {
+                hasRetried = true;
+                alert("Ti do un'altra possibilità solo perché eri distratta dalla mia bellezza");
+                setTimeout(() => {
+                    startGameNow();
+                }, 300);
+            } else {
+                setTimeout(() => {
+                    goToFinalScreen();
+                }, 500);
+            }
+        }
+
+        function goToFinalScreen() {
+            document.getElementById('finalHearts').textContent = heartsCollected;
+            document.getElementById('kissesNumber').textContent = heartsCollected;
+            nextScreen(3);
+            createFireworks();
+            createConfetti();
+        }
+
+        function createFireworks() {
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.left = Math.random() * 100 + '%';
+                    firework.style.top = Math.random() * 100 + '%';
+                    firework.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                    firework.style.setProperty('--x', (Math.random() - 0.5) * 200 + 'px');
+                    firework.style.setProperty('--y', (Math.random() - 0.5) * 200 + 'px');
+                    document.body.appendChild(firework);
+                    setTimeout(() => firework.remove(), 1000);
+                }, i * 50);
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#ff1744', '#f093fb', '#ffeaa7', '#74b9ff', '#fd79a8'];
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = -10 + 'px';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 3000);
+                }, i * 30);
+            }
+        }
+    </script>
+</body>
+</html>
